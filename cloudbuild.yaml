@@ -19,8 +19,10 @@ steps:
     - '--platform=managed'
     - '--allow-unauthenticated'
 
+# This section tells Cloud Build which images to store in Artifact Registry.
 images:
-- 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest'
+  - 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest'
 
+# This section resolves the 'invalid argument' log error from before.
 options:
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  logging: CLOUD_LOGGING_ONLY

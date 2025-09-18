@@ -1,11 +1,16 @@
+# Define your substitutions here. Cloud Build will automatically provide _PROJECT_ID_.
+# This ensures it's available for all steps.
+substitutions:
+  _IMAGE_NAME: 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app'
+
 steps:
 # 1. Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest', '.']
+  args: ['build', '-t', '${_IMAGE_NAME}:latest', '.']
 
 # 2. Push the container image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest']
+  args: ['push', '${_IMAGE_NAME}:latest']
 
 # 3. Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -14,14 +19,14 @@ steps:
     - 'run'
     - 'deploy'
     - 'my-flask-app-service'
-    - '--image=us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest'
+    - '--image=${_IMAGE_NAME}:latest'
     - '--region=us-central1'
     - '--platform=managed'
     - '--allow-unauthenticated'
 
-# This section tells Cloud Build which images to store in Artifact Registry.
+# This section lists the container images produced by the build.
 images:
-  - 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest'
+  - '${_IMAGE_NAME}:latest'
 
 # This section resolves the 'invalid argument' log error from before.
 options:

@@ -1,7 +1,7 @@
 # Define a substitution variable to make the build more manageable.
 # Cloud Build will automatically substitute the project ID.
 substitutions:
-  _IMAGE_NAME: 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app'
+  _IMAGE_NAME: 'us-central1-docker.pkg.dev/${PROJECT_ID}/my-python-app-repo/my-flask-app'
 
 steps:
 # 1. Build the container image using the substitution variable.

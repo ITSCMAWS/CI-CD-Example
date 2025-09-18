@@ -21,3 +21,6 @@ steps:
 
 images:
 - 'us-central1-docker.pkg.dev/_PROJECT_ID_/my-python-app-repo/my-flask-app:latest'
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

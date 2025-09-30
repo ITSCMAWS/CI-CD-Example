@@ -4,15 +4,25 @@ substitutions:
   _IMAGE_NAME: 'us-central1-docker.pkg.dev/${PROJECT_ID}/my-python-app-repo/my-flask-app'
 
 steps:
-# 1. Build the container image using the substitution variable.
+# 1. Install dependencies and run unit tests.
+# This step uses the same Python version as the Dockerfile for consistency.
+- name: 'python:3.9-slim'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    pip install --no-cache-dir -r requirements.txt
+    pytest
+
+# 2. Build the container image if tests pass.
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', '${_IMAGE_NAME}:latest', '.']
 
-# 2. Push the container image to Artifact Registry.
+# 3. Push the container image to Artifact Registry.
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '${_IMAGE_NAME}:latest']
 
-# 3. Deploy the container image to Cloud Run.
+# 4. Deploy the container image to Cloud Run.
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
